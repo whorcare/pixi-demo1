@@ -1,144 +1,63 @@
+<!-- 创建pixi -->
 <template>
-    <div class="home" @click.stop="canvasTranstion">
-        <div
-            class="f-fcc f-prafll _23qNjYCS"
-            @click="goNext"
-        >
-            <div class="_3VBMOwlt">进入</div>
-            <div class="_2oBBbcbu">第一个demo</div>
-        </div>
-        <canvas
-            id="canvas"
-            class="canvas-class"
-            :width="canvasWidth"
-            :height="canvasHeight"
-        ></canvas>
-    </div>
+  <div style="background: #f1d5d5">
+    <div id="canvas1" />
+    <canvas id="nowCanvas"></canvas>
+  </div>
 </template>
 
 <script>
+// eslint-disable-next-line import/no-unresolved
+import * as PIXI from 'pixi.js';
+
 export default {
-  created() {},
   data() {
     return {
-      move: 900, // 初始值
-      bezierX1: 650, // 贝塞尔x值
-      bezierX2: 650, // 贝塞尔x值
-      canvasWidth: 750, // canvas宽度
-      canvasHeight: 1334, // canvas高度
     };
   },
+
+  computed: {},
+
+  mounted() {
+    const app = new PIXI.Application({ width: 256, height: 256 });
+    document.getElementById('canvas1').appendChild(app.view);
+
+    console.log(app);
+
+    this.init2();
+  },
+
   methods: {
-    goNext() {
-      this.$router.push({ name: 'page1' });
-    },
-
-    canvasTranstion() {
-      const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d');
-
-      this.runAnimate(ctx);
-    },
-
-    runAnimate(ctx) {
-      ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-      ctx.beginPath();
-      ctx.moveTo(this.canvasWidth + 250, 0);
-      ctx.lineTo(this.move, 0);
-      ctx.bezierCurveTo(this.bezierX1, 500, this.bezierX2, 900, this.move, 1334);
-      ctx.lineTo(this.canvasWidth + 250, this.canvasHeight);
-      ctx.closePath();
-      ctx.fillStyle = 'rgb(237, 238, 235)';
-      ctx.strokeStyle = 'rgb(237, 238, 235)';
-      ctx.stroke();
-      ctx.fill();
-
-      this.move -= 5;
-
-      if (this.move === 50) {
-        this.bezierXFlag = true;
-        this.bezierX1 = 0;
-        this.bezierX2 = 0;
-      }
-
-      if (!this.bezierXFlag) {
-        this.bezierX1 -= 4;
-        this.bezierX2 -= 4;
-      } else if (this.move < -20) {
-        this.bezierX1 -= 6;
-        this.bezierX2 -= 6;
-        this.goNext();
-      } else {
-        this.bezierX1 += 6;
-        this.bezierX2 += 6;
-      }
-
-      if (this.move < -100) {
-        return;
-      }
-      setTimeout(() => {
-        this.runAnimate(ctx);
-      }, 4);
+    init2() {
+      const view = document.getElementById('nowCanvas');
+      const app = new PIXI.Application({
+        width: 256, // 宽度
+        height: 256, // 高度
+        view, // canvas dom实体
+        transparent: true, // default: false 透明度
+        backgroundColor: 0xfffff, // 背景色
+        autoDensity: true, // 以 CSS 像素调整渲染器视图的大小，以允许使用 1 以外的分辨率。
+        antialias: true, // default: false 反锯齿 这个让页面文字图案变得更平滑
+        /**
+         * 因为WebGL非常快，所以Pixi的renderer对象将默认为WebGL。如果您想使用canvas绘图API，可以将forceCanvas选项设置为true，如下所示：
+         */
+        forceCanvas: false, // 是否启用基础的canvas 而不使用webgl
+      });
+      console.log(app);
     },
   },
 };
-</script>
-<style lang="scss">
-@import "../assets/style/config.scss";
 
-body,
-#app,
-html {
+</script>
+<style lang='scss' scoped>
+#canvas {
+    position: relative;
     width: 100%;
     height: 100%;
 }
 
-.home {
-    width: 750px;
-    height: 100vh;
-    background: url('../assets/image/bg1.jpg');
-    background-size: 100% 100%;
-    position: relative;
-    background-color: #f1f1f1;
-    display: flex!important;
-}
-
-._23qNjYCS {
-    // position: absolute;
-    margin: auto;
-    bottom: 1rem;
-    width: 5.77rem;
-    height: 5.77rem;
-    display: flex!important;
-    display: inline-block;
-    background-image: url('../assets/image/loading.96b03f2.svg');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: 50%;
-    color: #191b18;
-    flex-direction: column;
-    justify-content: center;
-}
-
-._23qNjYCS ._3VBMOwlt {
-    font-size: .62rem;
-    margin-left: .05rem;
-    letter-spacing: .05rem;
-    text-align: center;
-}
-
-._23qNjYCS ._2oBBbcbu {
-    font-size: .26rem;
-    opacity: .4;
-    text-align: center;
-}
-
-
-.canvas-class {
-    width: 750px;
+canvas {
+    width: 100%;
     height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
 }
 </style>

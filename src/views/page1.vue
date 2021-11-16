@@ -1,109 +1,63 @@
+
+<!-- sprites（精灵）与stage（舞台） -->
 <template>
-    <div class="page1">
-        <div class="page1" ref="page1"></div>
-        <div class="button" @click="goNext">下一页</div>
-    </div>
+  <div id="canvas2" />
 </template>
 
 <script>
-import Matter from 'matter-js';
+/* eslint-disable global-require */
+// eslint-disable-next-line import/no-unresolved
+import * as PIXI from 'pixi.js';
 
 export default {
-  created() {},
-  mounted() {
-    this.init();
+  data() {
+    return {
+      App: null,
+    };
   },
+
+  computed: {},
+
+  mounted() {
+    this.App = new PIXI.Application({
+      width: 375,
+      height: 667,
+      transparent: true, // 设置舞台透明度
+    });
+    document.getElementById('canvas2').appendChild(this.App.view);
+
+    // 这里就是我的舞台
+    console.log(this.App.stage, '我的舞台');
+
+    // 创建我的精灵
+    const sprite = PIXI.Sprite.from(require('../assets/image/logo.png'));
+
+    // 一些常见的属性
+    sprite.width = 200;
+    sprite.height = 200;
+    sprite.x = 20;
+    sprite.y = 20;
+    sprite.alpha = 0.9;
+    sprite.visible = true;
+
+    this.App.stage.addChild(sprite);
+  },
+
   methods: {
-    goNext() {
-      this.$router.push({ name: 'page2' });
-    },
-    init() {
-      const { Engine } = Matter;//引擎.引擎模块包含创建和操作引擎的方法
-      const { Render } = Matter;//基于HTML5画布的渲染器
-      const { World } = Matter;//演出舞台. Matter.js 中任何的物体都需要一个舞台/容器，而存放这些物体的地方，则称之为World(世界)
-      const { Bodies } = Matter;//用于创建各种形状的物体，物体必须添加到Wolrd中，然后由引擎运行世界
-      const { MouseConstraint } = Matter; // 鼠标
 
-      const engine = Engine.create();
-      //render(渲染器)将要渲染的物理引擎是上面的engine，而渲染的对象是html网页的body
-      const render = Render.create({
-        element: this.$refs.page1,
-        engine,
-        options: {
-          width: 375,
-          height: 812,
-          fillStyle: '#edeeeb',
-          background: '#edeeeb', // 全局渲染模式时背景色
-          wireframeBackground: '#222', // 线框模式时背景色
-          wireframes: false,
-        },
-      });
-
-      /**
-     * Bodies.rectangle = function(x, y, width, height, options)
-     * x,y 分别表示矩形中心点的坐标，坐标的原点(0,0)在 Canvas(画布)的左上角
-     * width,height 分别表示矩形的宽和高
-     * options：描述矩形的参数，是一个 json 对象
-     * @type {body}
-     */
-      const boxA = Bodies.rectangle(200, 0, 80, 80);
-      const boxB = Bodies.rectangle(450, 100, 80, 80);
-      //将isStatic设为true，表示物体静止
-      const ground = Bodies.rectangle(400, 710, 810, 4, {
-        isStatic: true,
-        render: {
-          fillStyle: '#999',
-        },
-      });
-      const circle = Bodies.circle(300, 100, 25, {
-        render: {
-          fillStyle: '#f0c',
-        },
-      }); // 圆
-      const circle2 = Bodies.circle(300, 100, 25, {
-      }); // 圆
-      const circle3 = Bodies.circle(100, 100, 25, {
-      }); // 圆
-      const circle4 = Bodies.circle(300, 100, 25, {
-      }); // 圆
-      const circle5 = Bodies.circle(300, 100, 25, {
-      }); // 圆
-      const mouseConstraint = MouseConstraint.create(engine, {});
-      World.add(engine.world, [mouseConstraint, boxA, boxB, ground, circle, circle3, circle2, circle4, circle5]);// 将所有物体添加到世界中
-      Engine.run(engine);//运行引擎
-      Render.run(render);//运行渲染器
-
-
-      setInterval(() => {
-        const circle10 = Bodies.circle(Math.floor((Math.random() * 300) + 1), 0, 25, {
-        });
-        World.add(engine.world, [circle10]);
-      }, 2000);
-
-      setInterval(() => {
-        const circle10 = Bodies.circle(Math.floor((Math.random() * 300) + 1), 0, 25, {
-        });
-        World.add(engine.world, [circle10]);
-      }, 5000);
-    },
   },
 };
-</script>
-<style lang="scss" scoped>
-@import "../assets/style/config.scss";
 
-.page1 {
-    width: 750px;
-    height: 100%;
-    background: rgb(237, 238, 235);
+</script>
+<style lang='scss' scoped>
+#canvas {
     position: relative;
+    width: 100%;
+    height: 100%;
 }
 
-.button {
-    position: fixed;
+canvas {
     width: 100%;
-    bottom: 30px;
-    height: 60px;
-    text-align: center;
+    height: 100%;
 }
 </style>

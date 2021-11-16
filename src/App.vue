@@ -16,12 +16,9 @@
   opacity: 0.6;
 }
 
-.app {
-  background: #423b3b3b;
-}
-
 body, #app, html {
   margin: 0;
-  // width: 750px;
+  width: 100%;
+  height: 100%;
 }
 </style>
